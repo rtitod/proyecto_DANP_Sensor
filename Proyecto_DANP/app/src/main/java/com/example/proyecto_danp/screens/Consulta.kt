@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,81 +39,93 @@ fun Consulta(navController: NavHostController) {
         viewModel.getData().cachedIn(viewModel.viewModelScope)
     }.collectAsLazyPagingItems()
 
-    Column {
-        Text(
-            text = "Registros de Humedad",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            ),
-            modifier = Modifier.padding(20.dp)
-        )
-
-        LazyColumn {
-            items(dataItems) { dataItem ->
-                dataItem?.let { item ->
-                    Log.e("ITEM_SHOW", "${item.RegistroId}")
-                    DataItemRow(dataItem = item)
-                }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Atrás")
             }
-            dataItems.apply {
-                when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item { LoadingItem() }
+        }
+    ) {
+        Column {
+            Text(
+                text = "Registros de Humedad",
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                ),
+                modifier = Modifier.padding(20.dp)
+            )
+
+            LazyColumn {
+                items(dataItems) { dataItem ->
+                    dataItem?.let { item ->
+                        Log.e("ITEM_SHOW", "${item.RegistroId}")
+                        DataItemRow(dataItem = item)
                     }
-                    loadState.append is LoadState.Loading -> {
-                        item { LoadingItem() }
-                    }
-                    loadState.refresh is LoadState.Error -> {
-                        val errorMessage = (loadState.refresh as LoadState.Error).error.message
-                        item { ErrorItem(errorMessage = errorMessage) }
-                    }
-                    loadState.append is LoadState.Error -> {
-                        val errorMessage = (loadState.append as LoadState.Error).error.message
-                        item { ErrorItem(errorMessage = errorMessage) }
+                }
+                dataItems.apply {
+                    when {
+                        loadState.refresh is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+
+                        loadState.append is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+
+                        loadState.refresh is LoadState.Error -> {
+                            val errorMessage = (loadState.refresh as LoadState.Error).error.message
+                            item { ErrorItem(errorMessage = errorMessage) }
+                        }
+
+                        loadState.append is LoadState.Error -> {
+                            val errorMessage = (loadState.append as LoadState.Error).error.message
+                            item { ErrorItem(errorMessage = errorMessage) }
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 
-@Composable
-fun DataItemRow(dataItem: SensorRegister) {
-    // Aquí puedes definir el diseño de una fila de item de datos
-    SensorDataItemCard(sensorRegister = dataItem)
-}
-
-@Composable
-fun LoadingItem() {
-    // Aquí puedes definir el diseño de un elemento de carga
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+    @Composable
+    fun DataItemRow(dataItem: SensorRegister) {
+        // Aquí puedes definir el diseño de una fila de item de datos
+        SensorDataItemCard(sensorRegister = dataItem)
     }
 
-}
+    @Composable
+    fun LoadingItem() {
+        // Aquí puedes definir el diseño de un elemento de carga
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
 
-@Composable
-fun ErrorItem(errorMessage: String?) {
-    // Aquí puedes definir el diseño de un elemento de error
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = errorMessage ?: "Error desconocido",
-            style = MaterialTheme.typography.body1,
-            color = Color.Red
-        )
     }
 
-}
+    @Composable
+    fun ErrorItem(errorMessage: String?) {
+        // Aquí puedes definir el diseño de un elemento de error
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = errorMessage ?: "Error desconocido",
+                style = MaterialTheme.typography.body1,
+                color = Color.Red
+            )
+        }
+
+    }
 

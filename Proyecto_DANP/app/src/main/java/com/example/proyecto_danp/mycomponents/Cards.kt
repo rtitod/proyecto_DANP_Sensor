@@ -31,7 +31,7 @@ fun SensorDataItemCard(
                 .padding(10.dp)
         ) {
             Text(text = "Fecha: " + sensorRegister.FechayHora)
-            Text(text = "Medicion temperatura: " + sensorRegister.medida)
+            Text(text = "Medicion humedad: " + sensorRegister.medida)
             Text(text = "Comentario: " + sensorRegister.comentario)
         }
 

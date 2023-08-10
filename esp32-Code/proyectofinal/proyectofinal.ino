@@ -23,7 +23,7 @@ const char* httpsGetRequest = "https://qap9opok49.execute-api.us-west-2.amazonaw
 const char* httpsGetTapRequest = "https://t473ll27a2.execute-api.us-west-2.amazonaws.com/prod/llaveapi?startregister=1&maxregisters=1";
 const int TapTime = 2;
 const int DelayTime = 15;
-const int WifiTimeout = 30;
+const int WifiTimeout = 30000;
 const int fadeAmount = 5;  // Cantidad de cambio en el brillo por iteración
 const int channel = 0;     // Canal PWM
 

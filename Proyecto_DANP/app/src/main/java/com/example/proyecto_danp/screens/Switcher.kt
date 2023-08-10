@@ -25,7 +25,7 @@ fun Switcher(navController: NavHostController) {
             text = "Menu Principal",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 60.sp
             ),
             modifier = Modifier.padding(20.dp)
         )

@@ -26,6 +26,8 @@ import com.example.proyecto_danp.selector.PantallasExistentes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun Formulario(navController: NavHostController) {
@@ -39,7 +41,7 @@ fun Formulario(navController: NavHostController) {
     ) {
     Column {
         Text(
-            text = "Ingresar Registro de Sensor",
+            text = "Ingresar Parametros para Abrir la Llave",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
@@ -54,56 +56,48 @@ fun Formulario(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center)
     {
-        var fecha by remember { mutableStateOf("") }
-        var medida by remember { mutableStateOf("") }
-        var comentario by remember { mutableStateOf("") }
+        var nivelllave by remember { mutableStateOf("") }
+        var tiempoapertura by remember { mutableStateOf("") }
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Fecha"
+            text = "Nivel de Apertura"
         )
         OutlinedTextField(
-            value = fecha,
-            onValueChange = { fecha = it },
-            label = { Text("Ingrese Fecha") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Medida"
-        )
-        OutlinedTextField(
-            value = medida,
-            onValueChange = { medida = it },
-            label = { Text("Ingrese la medida del sensor") },
+            value = nivelllave,
+            onValueChange = { nivelllave = it },
+            label = { Text("Ingrese Nivel de Apertura") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Comentario"
+            text = "Tiempo de Apertura"
         )
         OutlinedTextField(
-            value = comentario,
-            onValueChange = { comentario = it },
-            label = { Text("Ingrese un Comentario") },
-            modifier = Modifier.fillMaxWidth()
+            value = tiempoapertura,
+            onValueChange = { tiempoapertura = it },
+            label = { Text("Ingrese el Tiempo de Apertura") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Button(onClick = {
-            if(fecha.isNotBlank() && medida.isNotBlank() && comentario.isNotBlank())
+            if(nivelllave.isNotBlank() && tiempoapertura.isNotBlank())
             {
+                val currentDate = Date()
+                val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+                val formattedDate = dateFormatter.format(currentDate)
                 runBlocking {
                     withContext(Dispatchers.IO) {
                         val lastRegistroId: Int? = getData_Retrofit_lastkey()
                         if (lastRegistroId != null) {
                             postData_Retrofit(
                                 lastRegistroId + 1,
-                                fecha,
-                                medida.toInt(),
-                                comentario
+                                nivelllave.toInt(),
+                                tiempoapertura.toInt(),
+                                formattedDate
                             )
                         }
                     }

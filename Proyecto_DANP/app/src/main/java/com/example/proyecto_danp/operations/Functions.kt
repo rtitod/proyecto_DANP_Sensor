@@ -2,6 +2,7 @@ package com.example.proyecto_danp.operations
 
 import android.util.Log
 import com.example.proyecto_danp.api.RestApi
+import com.example.proyecto_danp.entities.LlaveRegister
 import com.example.proyecto_danp.entities.SensorRegister
 import com.example.proyecto_danp.entities.SensorRegisterContainer
 import retrofit2.Call
@@ -42,20 +43,20 @@ fun getData_Retrofit_all(startregister: Int, maxregisters:Int): SensorRegisterCo
 
 fun postData_Retrofit(
     RegistroId: Int,
-    FechayHora: String,
-    medida: Int,
-    comentario: String
+    nivelgrifo: Int,
+    tiempoapertura: Int,
+    fechayhora: String
 ) {
-    var url = "https://qap9opok49.execute-api.us-west-2.amazonaws.com/prod/"
+    var url = "https://t473ll27a2.execute-api.us-west-2.amazonaws.com/prod/"
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val retrofitAPI = retrofit.create(RestApi::class.java)
-    val dataModel = SensorRegister(RegistroId, FechayHora,medida,comentario)
-    val call: Call<SensorRegister?>? = retrofitAPI.crearRegistro(dataModel)
-    call!!.enqueue(object : Callback<SensorRegister?> {
-        override fun onResponse(call: Call<SensorRegister?>?, response: Response<SensorRegister?>) {
+    val dataModel = LlaveRegister(RegistroId,nivelgrifo,tiempoapertura,fechayhora )
+    val call: Call<LlaveRegister?>? = retrofitAPI.crearRegistro(dataModel)
+    call!!.enqueue(object : Callback<LlaveRegister?> {
+        override fun onResponse(call: Call<LlaveRegister?>?, response: Response<LlaveRegister?>) {
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 Log.d("POST_SUCCESS", "Respuesta exitosa")
@@ -65,14 +66,14 @@ fun postData_Retrofit(
             }
         }
 
-        override fun onFailure(call: Call<SensorRegister?>?, t: Throwable) {
+        override fun onFailure(call: Call<LlaveRegister?>?, t: Throwable) {
             Log.e("POST_FAILURE", "Error en la solicitud: ${t.message}")
         }
     })
 }
 
 fun getData_Retrofit_lastkey(): Int? {
-    val url = "https://qap9opok49.execute-api.us-west-2.amazonaws.com/prod/"
+    val url = "https://t473ll27a2.execute-api.us-west-2.amazonaws.com/prod/"
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
         .addConverterFactory(GsonConverterFactory.create())
@@ -80,7 +81,7 @@ fun getData_Retrofit_lastkey(): Int? {
     val retrofitAPI = retrofit.create(RestApi::class.java)
 
     val startregister = 1
-    val maxregisters = 20
+    val maxregisters = 1
 
     try {
         val response = retrofitAPI.obtenerKeyMax(startregister, maxregisters).execute()

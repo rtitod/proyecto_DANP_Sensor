@@ -39,11 +39,11 @@ fun Switcher(navController: NavHostController) {
     )
     {
         Button(onClick = { navController.navigate(route = PantallasExistentes.FormularioScreen.route)}) {
-            Text(text = "Ingresar Datos a la Nube")
+            Text(text = "Control de la Llave (Grifo)")
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = { navController.navigate(route = PantallasExistentes.ConsultaScreen.route) }) {
-            Text(text = "Consultar Datos")
+            Text(text = "Consultar Datos del Sensor")
         }
     }
 
